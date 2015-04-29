@@ -52,7 +52,13 @@ RUN wget -q http://archive.apache.org/dist/lucene/solr/${SOLR_MINOR_VERSION}/sol
     rm solr-*.tgz && \
     mv solr* solr
 
-# XTF
+RUN cd /tomcat/webapps/ && \
+ rm -rf * && \
+ mkdir ROOT && \
+ cd ROOT && \
+ jar xf /solr/dist/solr-${SOLR_MINOR_VERSION}.war && \
+ cp -rp /solr/example/lib/ext/*.jar /tomcat/lib
+
 ENV SOLR_DATA /solr/data
 ENV SOLR_HOME /solr-home
 
@@ -75,7 +81,8 @@ RUN \
 
 USER solr
 
-# CMD ["/run.sh"]
+# CMD ["/tomcat/bin/catalina.sh","run"]
+CMD /tomcat/bin/catalina.sh run
 
 
 # Copyright (c) 2015, Regents of the University of California
